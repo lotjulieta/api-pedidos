@@ -1,0 +1,9 @@
+Django
+djangorestframework
+pytest
+django-admin
+django-extensions
+ipython
+
+python-dotenv==1.0.1
+psycopg2-binary==2.9.10

@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
+    depends_on:
+      - web
+    restart: "on-failure"
+    volumes:
+      - nginx_data:/etc/nginx
+      - nginx_logs:/var/log/nginx
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+      - ./logs:/code/logs
+    ports:
+      - "8000:8000"
+    expose:
+      - 8000
+    env_file:
+      - .env
+    restart: "on-failure"
+
+  db:
+    image: postgres:15
+    container_name: app-db
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  db_data:
+    driver: local
+  nginx_data:
+    driver: local
+  nginx_logs:
+    driver: local
+  web_static:
+    driver: local
+  web_logs:
+    driver: local
